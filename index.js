@@ -13,7 +13,6 @@ const pool = mysql.createPool({
   database: process.env.DB_NAME,
 });
 
-/*
 async function checkDatabaseConnection() 
 {
   try 
@@ -28,11 +27,11 @@ async function checkDatabaseConnection()
   }
 }
 checkDatabaseConnection();
-*/
+
 
 async function connectAndStartServer() {
-  app.listen(5001, () => {
-    console.log(`Example app listening on port 5001`);
+  app.listen(process.env.PORT, () => {
+    console.log(`Server running!`);
   });
 }
 

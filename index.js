@@ -4,6 +4,7 @@ const mysql = require('mysql2');
 const cors = require('cors');
 app.use(cors(), express.json());
 require('dotenv/config');
+const signinRoute = require("./routes/authentication/signinRoute");
 
 const pool = mysql.createPool({
   host: process.env.DB_HOST,
@@ -13,6 +14,7 @@ const pool = mysql.createPool({
   database: process.env.DB_NAME,
 });
 
+/*
 async function checkDatabaseConnection() 
 {
   try 
@@ -27,7 +29,9 @@ async function checkDatabaseConnection()
   }
 }
 checkDatabaseConnection();
+*/
 
+app.use('/signin',signinRoute);
 
 async function connectAndStartServer() {
   app.listen(process.env.PORT, () => {

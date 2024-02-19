@@ -2,9 +2,10 @@ const express = require('express');
 const router = express.Router();
 const pool = require("../../database/Database");
 
-router.post('/', (req, res) => {
-  const { email, password } = req.body;
-  //console.log(req.body);
+router.get('/:id', (req, res) => {
+  const userId = req.params.id;
+
+  //console.log(userId);
 
   pool.getConnection((err, connection) => {
     if (err) {
@@ -12,32 +13,22 @@ router.post('/', (req, res) => {
       return res.status(500).json({ message: 'Internal server error' });
     }
 
-    const sql = `SELECT * FROM Users WHERE Email = ? `;
+    const sql = `SELECT * FROM Users WHERE ID = ?`;
 
-    connection.query(sql, [email], (err, results, fields) => {
+    connection.query(sql, [userId], (err, results, fields) => {
       connection.release(); 
-     // console.log(results);
-      if (err) 
-      {
+
+      if (err) {
         console.error('Error executing MySQL query:', err);
         return res.status(500).json({ message: 'Internal server error' });
       }
 
-      if (results.length === 0) 
-      {
-        console.log("User not found");
+      if (results.length === 0) {
         return res.status(404).json({ message: 'User not found' });
       }
 
       const user = results[0];
-      if (user.Password === password) 
-      {
-        return res.status(200).json({ userMatched: 1, userID: user.ID});
-      } 
-      else 
-      {
-        return res.status(500).json({ userMatched: -1 });
-      }
+      return res.status(200).json({ user });
     });
   });
 });
